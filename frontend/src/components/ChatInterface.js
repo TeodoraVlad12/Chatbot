@@ -1,16 +1,17 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import api from "../library/api";
+import '../ChatInterface.css';
 
 export const ChatInterface = ({
-                           userId,
-                           conversationId,
-                           initialMessages = [],
-                           onNewMessage
-                       }) => {
+                                  userId,
+                                  conversationId,
+                                  initialMessages = [],
+                                  onNewMessage
+                              }) => {
     const [messages, setMessages] = useState(initialMessages);
     const [newMessage, setNewMessage] = useState('');
 
-    // Update messages when initialMessages change
     useEffect(() => {
         setMessages(initialMessages);
     }, [initialMessages]);
@@ -20,48 +21,35 @@ export const ChatInterface = ({
         if (!newMessage.trim()) return;
 
         try {
-            const response = await axios.post(`http://localhost:3000/addMessage`, {
+            const response = await api.post('/addMessage', {
                 sender: userId,
+                conversationId: conversationId,
                 content: newMessage,
-                conversationId: conversationId
             });
 
-            // Create user message
             const userMessage = {
                 sender: userId,
                 content: newMessage,
-                timestamp: new Date().toISOString()
+                conversationId: conversationId,
+                timestamp: response.data.timeStampUser
             };
 
-            // Add user message to local state and notify parent
-            setMessages(prevMessages => [...prevMessages, userMessage]);
+            const botMessageBack = {
+                sender: "bot",
+                content: response.data.botResponse,
+                conversationId: conversationId,
+                timestamp: response.data.timestampBot
+            };
+
+            setMessages(prevMessages => [...prevMessages, userMessage, botMessageBack]);
             onNewMessage(userMessage, response.data.conversationId);
+            onNewMessage(botMessageBack, response.data.conversationId);
 
-            // Clear input
             setNewMessage('');
-
-            // Simulate bot response (replace with actual bot logic)
-            setTimeout(() => {
-                const botResponse = {
-                    sender: 'bot',
-                    content: `You said: ${newMessage}`,
-                    timestamp: new Date().toISOString()
-                };
-
-                axios.post(`http://localhost:3000/addMessage`, {
-                    botResponse
-                });
-
-                setMessages(prevMessages => [...prevMessages, botResponse]);
-                onNewMessage(botResponse);
-            }, 500);
-
         } catch (error) {
             console.error('Error sending message', error);
         }
     };
-
-
 
     return (
         <div className="chat-interface">
