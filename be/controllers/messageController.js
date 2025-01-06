@@ -3,7 +3,7 @@ const Conversation = require('../models/Conversation'); // Use Mongoose model
 const mongoose = require('mongoose');
 
 exports.addMessage = async (req, res) => {
-    const { sender, conversationId, content } = req.body;
+    const { sender, conversationId, content, images } = req.body;
     const db = req.app.get('db');
 
     try {
@@ -37,10 +37,13 @@ exports.addMessage = async (req, res) => {
             }
         }
 
+        console.log('IMAGESSSSSSSSSS', images)
+
         const newMessageUser = new Message({
             sender,
             conversationId: resolvedConversationId,
-            content
+            content,
+            images
         });
 
         const resultUserMessage = await messagesCollection.insertOne(newMessageUser);
@@ -112,5 +115,4 @@ exports.getConversations = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch conversations' });
     }
 };
-
 

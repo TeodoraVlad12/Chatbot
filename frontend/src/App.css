@@ -180,3 +180,16 @@ button.new-chat {
   flex-direction: column;
   height: 100vh;
 }
+
+/* Thumbnail for image conversations */
+.conversation-thumbnail {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+}
+
+
+
