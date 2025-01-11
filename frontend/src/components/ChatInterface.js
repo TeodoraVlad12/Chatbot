@@ -77,6 +77,8 @@ export const ChatInterface = ({
         }
     };
 
+    console.log(messages)
+
     return (
         <div className="chat-interface">
             <div className="messages">
@@ -119,16 +121,16 @@ export const ChatInterface = ({
             </div>}
 
             <form onSubmit={sendMessage} className="message-input">
-            <div className="file-input-wrapper">
-                <button type="button" className="file-input-icon-button">📁</button>
-                <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={handleFileUpload}
-                    className="file-input"
-                 />
-            </div>
+                <div className="file-input-wrapper">
+                    <button type="button" className="file-input-icon-button">📁</button>
+                    <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleFileUpload}
+                        className="file-input"
+                    />
+                </div>
                 <input
                     type="text"
                     value={newMessage}

@@ -37,6 +37,7 @@ export const AuthComponent = ({ onLogin }) => {
 
     return (
         <div className="auth-container">
+            <h1>IntelliCare</h1>
             <h2>{isRegister ? 'Register' : 'Login'}</h2>
             {error && <div className="error">{error}</div>}
             <form onSubmit={handleSubmit}>

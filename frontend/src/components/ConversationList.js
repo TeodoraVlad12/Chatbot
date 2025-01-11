@@ -1,5 +1,6 @@
 import React from "react";
 import '../App.css';
+import Navbar from "./Navbar";
 
 export const ConversationList = ({ userId, onSelectConversation, selectedConversationId, conversations , onLogout}) => {
     const sortedConversations = [...conversations].sort(
@@ -8,6 +9,7 @@ export const ConversationList = ({ userId, onSelectConversation, selectedConvers
 
     return (
         <>
+            <Navbar />
             <div className="conversation-list">
                 {sortedConversations.map(conv => (
                     <div

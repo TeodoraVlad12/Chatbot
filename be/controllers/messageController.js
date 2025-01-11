@@ -1,6 +1,7 @@
 const Message = require('../models/Message'); // Use Mongoose model
 const Conversation = require('../models/Conversation'); // Use Mongoose model
 const mongoose = require('mongoose');
+const axios = require('axios')
 
 exports.addMessage = async (req, res) => {
     const { sender, conversationId, content, images } = req.body;
@@ -37,8 +38,6 @@ exports.addMessage = async (req, res) => {
             }
         }
 
-        console.log('IMAGESSSSSSSSSS', images)
-
         const newMessageUser = new Message({
             sender,
             conversationId: resolvedConversationId,
@@ -46,9 +45,12 @@ exports.addMessage = async (req, res) => {
             images
         });
 
-        const resultUserMessage = await messagesCollection.insertOne(newMessageUser);
+        const botResponse = await axios.post('http://localhost:5000/respond', {
+            prompt: content,
+            image: images?.[images.length - 1]
+        })
 
-        const botResponse = `Hi, I'm the bot! You said: "${content}"`;
+        const resultUserMessage = await messagesCollection.insertOne(newMessageUser);
 
         const newMessageBot = new Message({
             sender: "bot",

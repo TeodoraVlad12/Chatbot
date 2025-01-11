@@ -4,11 +4,17 @@ import { ChatInterface } from "./components/ChatInterface";
 import { ConversationList } from "./components/ConversationList";
 import { AuthComponent } from "./components/AuthComponent";
 import api from './library/api';
+import Navbar from './components/Navbar';
+
+const defaultInitialMessage = {
+  sender:  null,
+  content: 'Hello there, how can I help you?'
+}
 
 function App() {
   const [userId, setUserId] = useState(null);
   const [currentConversationId, setCurrentConversationId] = useState(null);
-  const [currentMessages, setCurrentMessages] = useState([]);
+  const [currentMessages, setCurrentMessages] = useState([defaultInitialMessage]);
   const [conversations, setConversations] = useState([]);
   const [newConversationToggle, setNewConversationToggle] = useState(false);
 
@@ -75,7 +81,7 @@ function App() {
         setCurrentMessages([]);
       }
     } else {
-      setCurrentMessages([]);
+      setCurrentMessages([defaultInitialMessage]);
     }
     fetchConversations();
   };
@@ -95,28 +101,31 @@ function App() {
 
   return (
       <div className="app-container">
-        <div className="header">
-        </div>
-        <div className="sidebar">
-          <ConversationList
-              userId={userId}
-              onSelectConversation={handleSelectConversation}
-              selectedConversationId={currentConversationId}
-              newConversationToggle={newConversationToggle}
-              conversations={conversations}
-              onLogout={handleLogout}
-          />
-         {/* <button onClick={handleLogout} className="logout-button">
-            Logout
-          </button>*/}
-        </div>
-        <div className="main-content">
-          <ChatInterface
-              userId={userId}
-              conversationId={currentConversationId}
-              initialMessages={currentMessages}
-              onNewMessage={handleNewMessage}
-          />
+        {/* <div className="header">
+          <Navbar />
+        </div> */}
+        <div className='main'>
+          <div className="sidebar">
+            <ConversationList
+                userId={userId}
+                onSelectConversation={handleSelectConversation}
+                selectedConversationId={currentConversationId}
+                newConversationToggle={newConversationToggle}
+                conversations={conversations}
+                onLogout={handleLogout}
+            />
+          {/* <button onClick={handleLogout} className="logout-button">
+              Logout
+            </button>*/}
+          </div>
+          <div className="main-content">
+            <ChatInterface
+                userId={userId}
+                conversationId={currentConversationId}
+                initialMessages={currentMessages}
+                onNewMessage={handleNewMessage}
+            />
+          </div>
         </div>
       </div>
   );
