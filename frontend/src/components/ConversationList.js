@@ -2,7 +2,7 @@ import React from "react";
 import '../App.css';
 import Navbar from "./Navbar";
 
-export const ConversationList = ({ userId, onSelectConversation, selectedConversationId, conversations , onLogout}) => {
+export const ConversationList = ({ userId, onDeleteConversation, onSelectConversation, selectedConversationId, conversations , onLogout}) => {
     const sortedConversations = [...conversations].sort(
         (a, b) => new Date(b.lastTimestamp) - new Date(a.lastTimestamp)
     );
@@ -18,7 +18,11 @@ export const ConversationList = ({ userId, onSelectConversation, selectedConvers
                         onClick={() => onSelectConversation(conv._id)}
                     >
                         {conv.firstMessage?.slice(0, 20)}...
+                        <button className="delete-chat" onClick={() => onDeleteConversation(conv._id)}>
+                            X
+                        </button>
                     </div>
+                    
                 ))}
             </div>
             <div className="button-container">

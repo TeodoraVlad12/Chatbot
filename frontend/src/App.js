@@ -33,6 +33,14 @@ function App() {
     }
   };
 
+  const handleDeleteConversation = async (conversationId) => {
+    try {
+      await api.delete(`/conversation/${conversationId}`);
+    } catch (err) {
+      console.error('Error deleting conversation: ', err)
+    }
+  }
+
   useEffect(() => {
     verifyToken();
   }, []);
@@ -109,6 +117,7 @@ function App() {
             <ConversationList
                 userId={userId}
                 onSelectConversation={handleSelectConversation}
+                onDeleteConversation={handleDeleteConversation}
                 selectedConversationId={currentConversationId}
                 newConversationToggle={newConversationToggle}
                 conversations={conversations}

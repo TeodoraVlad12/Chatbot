@@ -41,42 +41,67 @@ export const ChatInterface = ({
     const sendMessage = async (e) => {
         e.preventDefault();
         if (!newMessage.trim()) return;
-
+    
         try {
+            const currentConversationId = conversationId;
+    
             const response = await api.post('/addMessage', {
                 sender: userId,
-                conversationId: conversationId,
+                conversationId: currentConversationId,
                 content: newMessage,
-                images: uploadedFiles.map(file => file.base64)
+                images: uploadedFiles.map((file) => file.base64),
             });
-
+    
             const userMessage = {
                 sender: userId,
                 content: newMessage,
-                conversationId: conversationId,
+                conversationId: currentConversationId,
                 timestamp: response.data.timeStampUser,
-                images: uploadedFiles.map(file => file.base64)
-
+                images: uploadedFiles.map((file) => file.base64),
             };
-
-            const botMessageBack = {
-                sender: "bot",
-                content: response.data.botResponse,
-                conversationId: conversationId,
-                timestamp: response.data.timestampBot
+    
+            setMessages((prevMessages) => [...prevMessages, userMessage]);
+    
+            const botResponseText = response.data.botResponse;
+            let botMessage = {
+                sender: 'bot',
+                content: '',
+                conversationId: currentConversationId,
+                timestamp: response.data.timestampBot,
             };
-
-            setMessages(prevMessages => [...prevMessages, userMessage, botMessageBack]);
+    
+            setMessages((prevMessages) => [...prevMessages, botMessage]);
+    
+            for (let i = 0; i < botResponseText.length; i++) {
+                if (conversationId !== currentConversationId) {
+                    console.log('Conversation changed, stopping the bot response.');
+                    return;
+                }
+    
+                botMessage = {
+                    ...botMessage,
+                    content: botMessage.content + botResponseText[i],
+                };
+    
+                setMessages((prevMessages) => {
+                    const updatedMessages = [...prevMessages];
+                    updatedMessages[updatedMessages.length - 1] = botMessage;
+                    return updatedMessages;
+                });
+    
+                await new Promise((resolve) => setTimeout(resolve, 50));
+            }
+    
             onNewMessage(userMessage, response.data.conversationId);
-            onNewMessage(botMessageBack, response.data.conversationId);
-
+            onNewMessage(botMessage, response.data.conversationId);
+    
             setNewMessage('');
-            setUploadedFiles([])
+            setUploadedFiles([]);
         } catch (error) {
             console.error('Error sending message', error);
         }
     };
-
+    
     console.log(messages)
 
     return (

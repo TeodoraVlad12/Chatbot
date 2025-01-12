@@ -1,6 +1,7 @@
 const Message = require('../models/Message'); // Use Mongoose model
 const Conversation = require('../models/Conversation'); // Use Mongoose model
 const mongoose = require('mongoose');
+const { ObjectId } = require('mongodb');
 const axios = require('axios')
 
 exports.addMessage = async (req, res) => {
@@ -117,4 +118,25 @@ exports.getConversations = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch conversations' });
     }
 };
+
+exports.deleteConversation = async (req, res) => {
+    const { conversationId } = req.params;
+    const db = req.app.get('db');
+
+    const conversationsCollection = db.collection('conversations');
+
+    try {
+        const result = await conversationsCollection.deleteOne({ _id: new ObjectId(conversationId) });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'Conversation not found' });
+        }
+
+        res.status(200).json({ message: 'Conversation deleted successfully', conversationId });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to delete conversation ' + conversationId });
+    }
+};
+
 

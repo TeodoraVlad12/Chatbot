@@ -156,6 +156,8 @@ button.new-chat {
   word-break: break-word; /* This will allow text to wrap */
   white-space: normal; /* Allow text to wrap */
   line-height: 1.4;
+  display: flex;
+  justify-content: space-between;
 }
 
 .conversation-item:hover {
@@ -207,4 +209,14 @@ button.new-chat {
   font-weight: bolder;
   background-color: #0084ff;
   color: white;
+}
+
+.delete-chat {
+  background-color: #ff4444;
+  color: white;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -55,6 +55,8 @@ app.post('/verifyToken', authController.verifyToken);
 app.post('/addMessage', authenticateToken, messageController.addMessage);
 app.post('/getConversationMessages', authenticateToken, messageController.getMessagesForUser);
 app.post('/getUserConversations', authenticateToken, messageController.getConversations);
+app.delete('/conversation/:conversationId', authenticateToken, messageController.deleteConversation);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
